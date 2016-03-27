@@ -13,7 +13,7 @@ import org.springframework.web.servlet.view.JstlView;
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.jms.chat")
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:app.properties")
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override

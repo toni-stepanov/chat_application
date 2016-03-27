@@ -1,10 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+
 <head>
-    <title>hi</title>
+    <title>error</title>
 </head>
+
+
 <body>
-Saved Success
+
+<h2>OOOPS, Error</h2>
 
 </body>
+
+
 </html>
