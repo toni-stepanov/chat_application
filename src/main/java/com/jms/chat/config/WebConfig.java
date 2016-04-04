@@ -1,14 +1,16 @@
 package com.jms.chat.config;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 @Configuration
 @EnableWebMvc
@@ -16,19 +18,35 @@ import org.springframework.web.servlet.view.JstlView;
 @PropertySource("classpath:app.properties")
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("WEB-INF/pages/**").addResourceLocations("/pages/");
+    @Bean
+    public ServletContextTemplateResolver getTemplateResolver() {
+        ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
+        templateResolver.setPrefix("/WEB-INF/pages/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode("XHTML");
+        return templateResolver;
     }
 
-    @Bean
-    public InternalResourceViewResolver setupViewResolver() {
-        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setPrefix("/WEB-INF/pages/");
-        resolver.setSuffix(".jsp");
-        resolver.setViewClass(JstlView.class);
+    @Bean(name ="templateEngine")
+    public SpringTemplateEngine getTemplateEngine() {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(getTemplateResolver());
+        return templateEngine;
+    }
 
-        return resolver;
+    @Bean(name="viewResolver")
+    public ThymeleafViewResolver getViewResolver(){
+        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+        viewResolver.setTemplateEngine(getTemplateEngine());
+        return viewResolver;
+    }
+
+    @Bean(name ="messageSource")
+    public MessageSource getMessageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("/WEB-INF/i18/blogmsg");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
     }
 
 }

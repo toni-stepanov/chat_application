@@ -1,5 +1,6 @@
 package com.jms.chat.controller;
 
+import com.jms.chat.service.Writer;
 import com.jms.chat.validator.UserValidator;
 import com.jms.chat.entity.User;
 import com.jms.chat.service.UserService;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @Controller
 public class MainController {
@@ -26,6 +29,17 @@ public class MainController {
     UserValidator userValidator;
 
     Logger logger = Logger.getLogger(MainController.class);
+
+    @Autowired
+    private Writer writer;
+
+    @RequestMapping(value = "/register")
+    public ModelAndView getBlog(ModelAndView mv) {
+        mv.addObject("currentDate", new Date());
+        mv.addObject("writers", writer.getWriters());
+        mv.setViewName("myblog");
+        return mv;
+    }
 
     @RequestMapping(value = "/register")
     public String home(Model model)
